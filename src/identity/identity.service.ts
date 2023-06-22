@@ -62,19 +62,18 @@ export class IdentityService {
     // Combine contacts and sort by created time
     const allSortedContacts = [...existingContacts, ...linkedContacts].sort(
       (a, b) =>
-        a.createdAt.getUTCMilliseconds() - b.createdAt.getUTCMilliseconds(),
+        a.createdAt.getTime() - b.createdAt.getTime(),
     );
 
     const primaryContact = allSortedContacts[0]; // Oldest one is real primary
     const secondaryContacts = allSortedContacts.slice(1); // All others should be secondary, if not make them
-
     // Update newer primary records to secondary
     await this.checkAndUpdateRecordsToSecondary(
       secondaryContacts,
       primaryContact.id,
     );
 
-    // If customer has new contact information link it with primary contact
+    // // If customer has new contact information link it with primary contact
     const { emails, phoneNumbers, secondaryContactIds } =
       await this.checkAndCreateLinkedContact(
         allSortedContacts,
@@ -169,10 +168,11 @@ export class IdentityService {
     ];
 
     // Check if payload contains new information
-    const isNewMailId = email && !allUniqueMailIds.includes(email);
-    const isNewPhoneNumber =
-      phoneNumber && !allUniquePhoneNumbers.includes(phoneNumber);
-    let contact: Contact = null;
+    const isNewMailId: boolean = !!email && !allUniqueMailIds.includes(email);
+    const isNewPhoneNumber: boolean =
+      !!phoneNumber && !allUniquePhoneNumbers.includes(phoneNumber);
+
+      let contact: Contact = null;
     if (isNewMailId || isNewPhoneNumber) {
       // Create a new secondary contact
       contact = await this.create({
