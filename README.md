@@ -1,8 +1,16 @@
 # bitespeed-backend-assignment
 
 ## Local development
+### Prerequisites - 
+* docker
+* node 18.0+
 
-1. Bring up a local Postgres instance by running
+1. Install dependencies
+   ```
+   npm i
+   ```
+
+2. Start a local Postgres container by running
    ```
    docker compose up
    ```
